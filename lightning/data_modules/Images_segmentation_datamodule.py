@@ -154,8 +154,8 @@ class VCSELDataModule(LightningDataModule):
 
     def setup(self, stage=None):
         dataset_size = len(self.dataset)
-        train_size = int(0.05* dataset_size)
-        val_size = int(0.05 * dataset_size)
+        train_size = int(0.7* dataset_size)
+        val_size = int(0.2 * dataset_size)
         test_size = dataset_size - train_size - val_size
 
         self.train_ds, self.val_ds, self.test_ds = random_split(self.dataset, [train_size, val_size, test_size])

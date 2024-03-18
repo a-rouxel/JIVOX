@@ -1,28 +1,18 @@
 import pytorch_lightning as pl
-import torch
 import torch.nn as nn
-from OpticalModel import OpticalModel
-from AcquisitionModel import AcquisitionModel
-from SpectralFilterGenerator import SpectralFilterGeneratorLDA
+from physics_models.OpticalModel import OpticalModel
+from physics_models.AcquisitionModel import AcquisitionModel
+from lightning.models.SpectralFilterGenerator_model import SpectralFilterGeneratorLDA
 import segmentation_models_pytorch as smp
-from DataModule import VCSELDataModule
-from pytorch_lightning.loggers import TensorBoardLogger
 import torchmetrics
-from pytorch_lightning.callbacks import EarlyStopping
 from torch.utils.tensorboard import SummaryWriter
 import torchvision
-import matplotlib.pyplot as plt
-from helper import *
+from lightning.models.helper import *
 import pandas as pd
 import io
 from PIL import Image
 from torch.nn import functional as F
-from useful_functions import *
-import time
-from pytorch_lightning.profilers import PyTorchProfiler
-from datetime import datetime
-
-
+from lightning.lightning_modules.useful_functions import *
 
 
 class UnetModel(nn.Module):

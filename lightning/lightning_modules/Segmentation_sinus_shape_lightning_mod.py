@@ -1,32 +1,18 @@
 import pytorch_lightning as pl
-import torch
 import torch.nn as nn
-from OpticalModel import OpticalModel
-from AcquisitionModel import AcquisitionModel
-from SpectralFilterGenerator import ResNet1D_Peter_with_optim
+from physics_models.OpticalModel import OpticalModel
+from physics_models.AcquisitionModel import AcquisitionModel
+from lightning.models.SpectralFilterGenerator_model import ResNet1D_Peter_with_optim
 import segmentation_models_pytorch as smp
-import random
-from DataModule import VCSELDataModule
-from pytorch_lightning.loggers import TensorBoardLogger
 import torchmetrics
-from pytorch_lightning.callbacks import EarlyStopping
 from torch.utils.tensorboard import SummaryWriter
 import torchvision
-import matplotlib.pyplot as plt
-import numpy as np
-import torchvision.transforms as transforms
 from PIL import Image
-from useful_functions import calculate_mean_spectra
+from lightning.lightning_modules.useful_functions import calculate_mean_spectra
 import torch.nn.functional as F
-from scipy.ndimage import convolve,binary_dilation
-import numpy as np
-import os
-import time
-from pytorch_lightning.profilers import PyTorchProfiler
-from datetime import datetime
 import io
 import pandas as pd
-from helper import *
+from lightning.models.helper import *
 
 
 

@@ -46,44 +46,39 @@ def create_object(collection, name, obj_type, location, scale, rotation, vertice
     collection.objects.link(obj)
     bpy.context.scene.collection.objects.unlink(obj)
    
-# Function to create a circular VCSEL with pad, aperture, and mesa components
-def create_vcsel(name, type, location, rotation, scale_pad, scale_aperture, scale_mesa, vertices=None, bevel_segments=1):
+def create_vcsel(name, type, location, rotation, scale_pad, scale_aperture, scale_mesa, object_names, vertices=None, bevel_segments=1):
     collection = create_collection(name)
-    #create_object(collection, "pad", type, location, scale_pad, rotation, vertices, bevel_segments)
-    create_object(collection, "aperture1", type, location, scale_aperture, rotation, vertices, bevel_segments)
-    create_object(collection, "aperture2", type, location, scale_aperture, rotation, vertices, bevel_segments)
-    create_object(collection, "mesa", type, location, scale_mesa, rotation, vertices, bevel_segments)
+    create_object(collection, object_names['background'], type, location, [i*10 for i in scale_aperture], rotation, vertices, bevel_segments)
+    create_object(collection, object_names['mesa_border'], type, location, scale_pad, rotation, vertices, bevel_segments)
+    create_object(collection, object_names['full_oxide'], type, location, scale_aperture, rotation, vertices, bevel_segments)
+    create_object(collection, object_names['aperture_2'], type, location, scale_aperture, rotation, vertices, bevel_segments)
+    create_object(collection, object_names['aperture_1'], type, location, scale_mesa, rotation, vertices, bevel_segments)
 
 
-# Base directory for output
-base_output_dir = '../dataset'
+object_names = ["background","mesa_border","full_oxide","aperture_2","aperture_1"]
+base_output_dir = "./dataset"
 
-# Generate and render VCSELs based on configurations
-for i in range(10):
+for i in range(2):
     clear_collections()  # Clear existing collections
     
-    # Directory for the current VCSEL configuration
     vcsel_dir = base_output_dir + f"/VCSEL_{i}"
     
-    # Load VCSEL parameters from the configuration file
     with open(vcsel_dir + "/config.json") as file:
         vcsel_params = json.load(file)
     
-    # Create the VCSEL based on loaded parameters
-    create_vcsel(**vcsel_params)
+    # Pass the object names to the create_vcsel function
+    create_vcsel(object_names=object_names, **vcsel_params)
 
-    # Set up rendering settings
     render = bpy.context.scene.render
     render.image_settings.file_format = 'PNG'
 
-    # Render each component (mesa, aperture, pad) of the VCSEL and save the images
-    for name_prefix in ["mesa", "aperture", "pad"]:
+    # Loop through the object names defined in the configuration
+    for name_key in object_names:
+        name_prefix = object_names[name_key]
         for obj in bpy.context.scene.objects:
-            # Hide the object if its name does not start with the specified prefixes
             obj.hide_render = not obj.name.startswith(name_prefix)
-
-        # Set the file path for rendering and render the image
+        
         render.filepath = os.path.join(vcsel_dir, f'init_mask_{name_prefix}.png')
         bpy.ops.render.render(write_still=True)
 
-    clear_collections()  # Clear collections after rendering is done
+    #clear_collections()  # Clear collections after rendering is done

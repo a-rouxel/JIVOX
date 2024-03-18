@@ -13,19 +13,19 @@ def modify_layer(layer_entry, new_thickness):
         modified_layer["thickness"] = round(new_thickness, 2)  # Round to 2 decimal places
     return modified_layer
 
-with open('dataset_generation/config_dataset.yaml', 'r') as file:
+with open('./dataset_generation/config_dataset.yaml', 'r') as file:
     config = yaml.safe_load(file)
 
-input_dir_path = "dataset_generation/multilayer_stacks/configs/"
+input_dir_path = "./dataset_generation/multilayer_stacks/configs/"
 output_dir_path = config["dir_dataset"] + "/output_spectra/configs/"
 
 #
 # filename = "stacks_VCSEL940_non_resonnant"
-# filename = "stacks_VCSEL850"
-filename = "stacks_VCSEL940_resonnant"
+filename = "stacks_VCSEL850"
+# filename = "stacks_VCSEL940_resonnant"
 
 
-for j in range(100):
+for j in range(10):
 
     # Load the JSON data from the file
     with open(input_dir_path + filename + "/" + filename + ".json", "r") as json_file:
@@ -37,18 +37,18 @@ for j in range(100):
     nth_layers = [3,5,7,9,11] # VCSEL 850
 
 
-    # new_thickness = [random.uniform(0.056, 0.075),
-    #                  random.uniform(0.025, 0.035),
-    #                  random.uniform(0.065, 0.1),
-    #                  random.uniform(0.065, 0.1),
-    #                  random.uniform(0.056, 0.075),
-    #                  ]  # Generate random thickness values at 850 nm
-
     new_thickness = [random.uniform(0.056, 0.075),
                      random.uniform(0.025, 0.035),
-                     random.uniform(0.189, 0.21),
-                     random.uniform(0.056, 0.075)
-                     ]  # Generate random thickness values at 940 nm
+                     random.uniform(0.065, 0.1),
+                     random.uniform(0.065, 0.1),
+                     random.uniform(0.056, 0.075),
+                     ]  # Generate random thickness values at 850 nm
+
+    # new_thickness = [random.uniform(0.056, 0.075),
+    #                  random.uniform(0.025, 0.035),
+    #                  random.uniform(0.189, 0.21),
+    #                  random.uniform(0.056, 0.075)
+    #                  ]  # Generate random thickness values at 940 nm
 
     # Loop over each stack, skipping 'stack_background'
     for stack_name, stack_layers in data.items():

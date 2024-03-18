@@ -1,7 +1,7 @@
 dir_dataset: "./dataset"
 
 starting_idx: 0
-number_of_configs_to_generate: 10
+number_of_configs_to_generate: 2
 vcsel_types:
   - "cube"
   - "cylinder" # cylinder is the basic shape for circular or hexagonal VCSELs

@@ -1,0 +1,5 @@
+*/*.h5
+*/multilayer_stacks/*
+./dataset_*
+*/__pycache*
+*idea*

@@ -2,8 +2,8 @@ import numpy as np
 import matplotlib.pyplot as plt
 from sklearn.discriminant_analysis import LinearDiscriminantAnalysis as LDA
 import pytorch_lightning as pl
-from spectral_filter_functions import *
-from helper import *
+from lightning.models.spectral_filter_functions import *
+from lightning.models.helper import *
 import torch
 from torch import nn
 import torch.nn.functional as F
