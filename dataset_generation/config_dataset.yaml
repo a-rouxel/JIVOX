@@ -1,0 +1,45 @@
+dir_dataset: "./dataset"
+
+starting_idx: 0
+number_of_configs_to_generate: 10
+vcsel_types:
+  - "cube"
+  - "cylinder" # cylinder is the basic shape for circular or hexagonal VCSELs
+basic_scale_mesa: [2.2, 2.2, 0.1]
+rotation_: "random"
+location: "almost centered"
+vertices: [6, 80]
+bevel_segments: [2, 4]
+object_names:
+  background: "background"
+  mesa_border: "mesa_border"
+  full_oxide: "full_oxide"
+  aperture_2: "aperture_2"
+  aperture_1: "aperture_1"
+
+
+WINDOW_WIDTH: 110
+L_OX_ref: 2
+ANISO: 0.075
+nb_of_vcsel_to_oxydize: 125
+nb_of_oxyd_iter: 25
+speed_depending_on_c:
+  "Al 100%": 2.8
+  "Al 98.5%": 0.98
+  "Al 98%": 0.69
+  "Al 97.8%": 0.65
+  "Al 97%": 0.42
+  "Al 96%": 0.25
+  "Al 95%": 0.18
+  "Al 90%": 0.045
+names_oxydize_aperture:
+  - "aperture_1"
+  - "aperture_2"
+list_of_list_L_OX:
+  - ["Al 98%", "Al 97.8%"]
+  - ["Al 98%", "Al 90%"]
+  - ["Al 98%", "Al 96%"]
+  - ["Al 98%", "Al 90%"]
+
+rescale_factor: 0.25
+nb_of_vcsels_per_category: 166

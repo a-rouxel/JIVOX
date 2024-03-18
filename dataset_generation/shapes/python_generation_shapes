@@ -1,0 +1,89 @@
+import bpy
+import os
+import math
+import json
+
+# Function to create a new collection in the Blender scene
+def create_collection(collection_name):
+    new_collection = bpy.data.collections.new(collection_name)
+    bpy.context.scene.collection.children.link(new_collection)
+    return new_collection
+
+# Function to clear all collections from the scene, with the option to exclude certain collections
+def clear_collections(exclude_collections=None):
+    if exclude_collections is None:
+        exclude_collections = ["Collection"]  # Default collections to exclude
+    for collection in bpy.data.collections:
+        if collection.name not in exclude_collections:
+            bpy.data.collections.remove(collection)
+
+# Function to create an object (cylinder or cube) with a bevel modifier and assign a material
+def create_object(collection, name, obj_type, location, scale, rotation, vertices, bevel_segments):
+    # Create the object based on the specified type
+    if obj_type == 'cylinder':
+        bpy.ops.mesh.primitive_cylinder_add(vertices=vertices, location=location)
+    elif obj_type == 'cube':
+        bpy.ops.mesh.primitive_cube_add(location=location)
+    
+    obj = bpy.context.active_object
+    obj.name = name
+    obj.scale = scale
+    obj.rotation_euler = [math.radians(angle) for angle in rotation]  # Convert degrees to radians
+
+    # Add bevel modifier
+    bpy.ops.object.modifier_add(type='BEVEL')
+    obj.modifiers['Bevel'].segments = bevel_segments
+
+    # Assign material if available
+    material = bpy.data.materials.get(name)
+    if material:
+        if obj.data.materials:
+            obj.data.materials[0] = material
+        else:
+            obj.data.materials.append(material)
+
+    # Link the object to the specified collection and unlink from the current scene
+    collection.objects.link(obj)
+    bpy.context.scene.collection.objects.unlink(obj)
+   
+# Function to create a circular VCSEL with pad, aperture, and mesa components
+def create_vcsel(name, type, location, rotation, scale_pad, scale_aperture, scale_mesa, vertices=None, bevel_segments=1):
+    collection = create_collection(name)
+    #create_object(collection, "pad", type, location, scale_pad, rotation, vertices, bevel_segments)
+    create_object(collection, "aperture1", type, location, scale_aperture, rotation, vertices, bevel_segments)
+    create_object(collection, "aperture2", type, location, scale_aperture, rotation, vertices, bevel_segments)
+    create_object(collection, "mesa", type, location, scale_mesa, rotation, vertices, bevel_segments)
+
+
+# Base directory for output
+base_output_dir = '../dataset'
+
+# Generate and render VCSELs based on configurations
+for i in range(10):
+    clear_collections()  # Clear existing collections
+    
+    # Directory for the current VCSEL configuration
+    vcsel_dir = base_output_dir + f"/VCSEL_{i}"
+    
+    # Load VCSEL parameters from the configuration file
+    with open(vcsel_dir + "/config.json") as file:
+        vcsel_params = json.load(file)
+    
+    # Create the VCSEL based on loaded parameters
+    create_vcsel(**vcsel_params)
+
+    # Set up rendering settings
+    render = bpy.context.scene.render
+    render.image_settings.file_format = 'PNG'
+
+    # Render each component (mesa, aperture, pad) of the VCSEL and save the images
+    for name_prefix in ["mesa", "aperture", "pad"]:
+        for obj in bpy.context.scene.objects:
+            # Hide the object if its name does not start with the specified prefixes
+            obj.hide_render = not obj.name.startswith(name_prefix)
+
+        # Set the file path for rendering and render the image
+        render.filepath = os.path.join(vcsel_dir, f'init_mask_{name_prefix}.png')
+        bpy.ops.render.render(write_still=True)
+
+    clear_collections()  # Clear collections after rendering is done
