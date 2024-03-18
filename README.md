@@ -33,7 +33,7 @@ pip install -r requirements.txt
 
 ## Option A - Download the dataset
 
-The dataset (train and test) is available at the following link : [Link to dataset](https://drive.google.com/drive/folders/1
+The dataset (train and test) is available at the following link : [Link to dataset](https://cloud.laas.fr/index.php/s/OqBRluL7T3F0PV1)
 Put them in a dataset directory at the root of the project.
 
 ## Option B - Generate the dataset
